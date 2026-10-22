@@ -1,0 +1,63 @@
+{
+  "name": "cs61a-test-button",
+  "displayName": "CS61A 测试按钮",
+  "description": "在状态栏加一个按钮，点一下就能跑当前作业的 ok 测试（无需快捷键）",
+  "version": "1.0.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cs61a.testHere",
+        "title": "CS61A: 测试当前作业",
+        "category": "CS61A"
+      },
+      {
+        "command": "cs61a.testOne",
+        "title": "CS61A: 只跑某一题",
+        "category": "CS61A"
+      },
+      {
+        "command": "cs61a.testFile",
+        "title": "CS61A: 测试这个文件所在的作业",
+        "category": "CS61A"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "cs61a.testFile",
+          "when": "explorerResourceIsFile && resourceExtname =~ /\\.py$/",
+          "group": "7_modification@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "cs61a.testFile",
+          "group": "7_modification@1"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "cs61a.testFile",
+          "group": "7_modification@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "cs61a.testFile",
+          "when": "false"
+        }
+      ]
+    }
+  }
+}

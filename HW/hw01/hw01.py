@@ -1,5 +1,3 @@
-from operator import add, sub
-
 def a_plus_abs_b(a, b):
     """Return a+abs(b), but without calling abs.
 
@@ -13,13 +11,14 @@ def a_plus_abs_b(a, b):
     3
     """
     if b < 0:
-        f = _____
+        f = _sub___
     else:
-        f = _____
+        f = ___add__
     return f(a, b)
 
+
 def a_plus_abs_b_syntax_check():
-    """Check that you didn't change the return statement of a_plus_abs_b.
+    r"""Check that you didn't change the return statement of a_plus_abs_b.
 
     >>> # You aren't expected to understand the code of this test.
     >>> import inspect, re
@@ -42,7 +41,10 @@ def two_of_three(i, j, k):
     >>> two_of_three(5, 5, 5)
     50
     """
-    return _____
+    return __import__("operator").add(
+        __import__("operator").mul(i, i), __import__("operator").mul(j, j)
+    )
+
 
 def two_of_three_syntax_check():
     """Check that your two_of_three code consists of nothing but a return statement.
@@ -88,4 +90,3 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
-

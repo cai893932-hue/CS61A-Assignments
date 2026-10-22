@@ -1,0 +1,19 @@
+{
+  "keybindings": [
+    {
+      "key": "f6",
+      "command": "cs61a.testHere",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "f7",
+      "command": "cs61a.testOne",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "f8",
+      "command": "cs61a.testFile",
+      "when": "explorerFocus && explorerResourceIsFile"
+    }
+  ]
+}

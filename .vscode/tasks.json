@@ -15,7 +15,8 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       },
       "group": {
         "kind": "test",
@@ -37,7 +38,8 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       }
     },
     {
@@ -56,7 +58,8 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       }
     },
     {
@@ -72,7 +75,25 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "ok: 测试当前文件夹 (万能脚本)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "${workspaceFolder}/test.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
       }
     }
   ]
