@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-python-pylance",
+    "ms-python.debugpy",
+    "ms-python.python-formatter",
+    "charliermarsh.ruff",
+    "ms-vscode.vscode-git",
+    "eamodio.gitlens",
+    "usernamehw.errorlens",
+    "ms-python.isort",
+    "redhat.vscode-yaml"
+  ]
+}

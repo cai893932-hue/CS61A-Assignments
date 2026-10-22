@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: 当前文件",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${fileDirname}"
+    },
+    {
+      "name": "Python: 项目入口 (如 cats.py / hog.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${fileDirname}",
+      "args": [
+        "--local"
+      ]
+    },
+    {
+      "name": "Python: 调试测试 (ok --local)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "ok",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${fileDirname}",
+      "args": [
+        "--local"
+      ]
+    },
+    {
+      "name": "Python: 附加到进程",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "justMyCode": false
+    }
+  ]
+}
