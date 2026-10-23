@@ -1,3 +1,5 @@
+from operator import add, sub
+
 def a_plus_abs_b(a, b):
     """Return a+abs(b), but without calling abs.
 
@@ -11,9 +13,9 @@ def a_plus_abs_b(a, b):
     3
     """
     if b < 0:
-        f = _sub___
+        f = sub
     else:
-        f = ___add__
+        f = add
     return f(a, b)
 
 
