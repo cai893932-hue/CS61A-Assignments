@@ -193,8 +193,12 @@ def always_roll(n):
     3
     """
     assert n >= 0 and n <= 10
+
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+    def strategy(score, opponent_score):
+        return n
+
+    return strategy
     # END PROBLEM 6
 
 
@@ -204,7 +208,7 @@ def catch_up(score, opponent_score):
 
     >>> catch_up(9, 4)
     5
-    >>> strategy(17, 18)
+    >>> catch_up(17, 18)
     6
     """
     if score < opponent_score:
@@ -225,7 +229,12 @@ def is_always_roll(strategy, goal=GOAL):
     False
     """
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    first_roll = strategy(0, 0)
+    for score in range(goal):
+        for opponent_score in range(goal):
+            if strategy(score, opponent_score) != first_roll:
+                return False
+    return True
     # END PROBLEM 7
 
 
