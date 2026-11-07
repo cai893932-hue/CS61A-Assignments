@@ -249,8 +249,15 @@ def make_averaged(original_function, times_called=1000):
     >>> averaged_dice(1, dice)  # The avg of 10 4's, 10 2's, 10 5's, and 10 1's
     3.0
     """
+
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    def averaged_function(*args):
+        total = 0
+        for _ in range(times_called):
+            total += original_function(*args)
+        return total / times_called
+
+    return averaged_function
     # END PROBLEM 8
 
 
@@ -263,7 +270,15 @@ def max_scoring_num_rolls(dice=six_sided, times_called=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    best_num_rolls = 1
+    max_average = 0
+    averaged_roll = make_averaged(roll_dice, times_called)
+    for num_rolls in range(1, 11):
+        average_score = averaged_roll(num_rolls, dice)
+        if average_score > max_average:
+            max_average = average_score
+            best_num_rolls = num_rolls
+    return best_num_rolls
     # END PROBLEM 9
 
 
