@@ -322,6 +322,8 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
     points, and returns NUM_ROLLS otherwise. Ignore score and Sus Fuss.
     """
     # BEGIN PROBLEM 10
+    if boar_brawl(score, opponent_score) >= threshold:
+        return 0
     return num_rolls  # Remove this line once implemented.
     # END PROBLEM 10
 
@@ -329,6 +331,10 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
 def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
     """This strategy returns 0 dice when your score would increase by at least threshold."""
     # BEGIN PROBLEM 11
+    # 「掷 0 个骰子能涨多少」= sus_update(0, score, opponent_score) - score
+    # （0 骰时 simple_update 只加 Boar Brawl 分，再过一遍 Sus Fuss）
+    if sus_update(0, score, opponent_score) - score >= threshold:
+        return 0
     return num_rolls  # Remove this line once implemented.
     # END PROBLEM 11
 
@@ -336,10 +342,21 @@ def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
 def final_strategy(score, opponent_score):
     """Write a brief description of your final strategy.
 
-    *** YOUR DESCRIPTION HERE ***
+    *** 首先检查sus策略,再检查boar策略,最后基础保底,如果落后多,掷4-6个,反之,掷2-3个 ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Remove this line once implemented.
+    sus_rolls = sus_strategy(score, opponent_score, threshold=11, num_rolls=6)
+    if sus_rolls == 0:
+        return 0
+    boar_rolls = boar_strategy(score, opponent_score, threshold=11, num_rolls=6)
+    if boar_rolls == 0:
+        return 0
+    if score < opponent_score:
+        return 4
+    elif score > opponent_score:
+        return 3
+    else:
+        return 4  # Remove this line once implemented.
     # END PROBLEM 12
 
 
