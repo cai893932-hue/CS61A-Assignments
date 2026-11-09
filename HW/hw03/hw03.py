@@ -24,7 +24,13 @@ def num_eights(n):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n == 0 :
+        return 0
+    if n % 10 == 8:
+        return 1+num_eights(n//10)
+    else:
+        return num_eights(n//10)
+
 
 
 def digit_distance(n):
@@ -46,7 +52,9 @@ def digit_distance(n):
     ...       ['For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    return abs((n//10)%10 - n%10) + digit_distance(n//10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -70,7 +78,14 @@ def interleaved_sum(n, odd_func, even_func):
     >>> check(HW_SOURCE_FILE, 'interleaved_sum', ['BitAnd', 'BitOr', 'BitXor']) # ban bitwise operators, don't worry about these if you don't know what they are
     True
     """
-    "*** YOUR CODE HERE ***"
+    # 不能用 % 判断奇偶，就把「该用哪个函数」也当作状态往下传，
+    # 每层用 not 翻转一次：True -> odd, False -> even
+    def helper(current, use_odd):
+        if current > n:
+            return 0
+        f = odd_func if use_odd else even_func
+        return f(current) + helper(current + 1, not use_odd)
+    return helper(1, True)
 
 
 def next_smaller_dollar(bill):
@@ -106,7 +121,15 @@ def count_dollars(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helpers(total, largest):
+        if total == 0:
+            return 1
+        if total < 0 or largest is None:
+            return 0
+        use_largest = helpers(total - largest, largest)
+        no_use_largest = helpers(total, next_smaller_dollar(largest))
+        return use_largest + no_use_largest
+    return helpers(total, 100)
 
 
 def next_larger_dollar(bill):
@@ -142,7 +165,15 @@ def count_dollars_upward(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars_upward', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helpers(total, smallest):
+        if total == 0:
+            return 1
+        if total < 0 or smallest is None:
+            return 0
+        use_smallest = helpers(total - smallest, smallest)
+        no_use_smallest = helpers(total, next_larger_dollar(smallest))
+        return use_smallest + no_use_smallest
+    return helpers(total, 1)
 
 
 def print_move(origin, destination):
@@ -177,10 +208,16 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
-    "*** YOUR CODE HERE ***"
+    spare = 6 - start - end
+    if n == 0:
+        return
+    move_stack(n-1,start,spare)
+    print_move(start, end)
+    move_stack(n-1,spare,end)
 
 
-from operator import sub, mul
+from operator import mul, sub
+
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -193,5 +230,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: f(f))(lambda f: lambda n: 1 if n <= 1 else n * f(f)(n - 1))
 
