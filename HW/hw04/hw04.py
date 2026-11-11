@@ -12,7 +12,14 @@ def shuffle(s):
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     """
     assert len(s) % 2 == 0, 'len(seq) must be even'
-    "*** YOUR CODE HERE ***"
+    mid = len(s)//2
+    first_half = s[:mid]
+    second_half = s[mid:]
+    result = []
+    for i in range(mid):
+        result.append(first_half[i])
+        result.append(second_half[i])
+    return result
 
 
 def deep_map(f, s):
@@ -37,7 +44,12 @@ def deep_map(f, s):
     >>> s3 is s2[1]
     True
     """
-    "*** YOUR CODE HERE ***"
+    # 原地修改：只对叶子（非 list 元素）施加 f，list 元素递归进去
+    for i in range(len(s)):
+        if type(s[i]) == list:
+            deep_map(f, s[i])
+        else:
+            s[i] = f(s[i])   # 是 = 不是 ==，比较不会改任何东西
 
 
 HW_SOURCE_FILE=__file__
@@ -46,12 +58,15 @@ HW_SOURCE_FILE=__file__
 def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
-    "*** YOUR CODE HERE ***"
+    return ['planet', mass]   # 构造函数必须带标签，否则 is_planet 认不出来
 
 def mass(p):
     """Select the mass of a planet."""
     assert is_planet(p), 'must call mass on a planet'
-    "*** YOUR CODE HERE ***"
+    if type(p) == list:
+        return p[1]        # 取标签后的第二个元素，p(1) 是调用，list 不可调用
+    else:
+        return p
 
 def is_planet(p):
     """Whether p is a planet."""
@@ -103,11 +118,22 @@ def balanced(m):
     >>> check(HW_SOURCE_FILE, 'balanced', ['Index'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    # 两个条件必须同时成立：本层力矩相等，且两个子移动装置（若有）各自平衡
+    left_arm, right_arm = left(m), right(m)
+    left_end, right_end = end(left_arm), end(right_arm)
+    torque_equal = length(left_arm) * total_mass(left_end) == length(right_arm) * total_mass(right_end)
+
+    sub_balanced = True
+    for sub in (left_end, right_end):
+        if is_mobile(sub):
+            sub_balanced = sub_balanced and balanced(sub)
+
+    return torque_equal and sub_balanced
+
 
 
 def berry_finder(t):
-    """Returns True if t contains a node with the value 'berry' and 
+    """Returns True if t contains a node with the value 'berry' and
     False otherwise.
 
     >>> scrat = tree('berry')
@@ -123,7 +149,12 @@ def berry_finder(t):
     >>> berry_finder(t)
     True
     """
-    "*** YOUR CODE HERE ***"
+    if label(t) == 'berry':      # 冒号不能省
+        return True
+    for branch in branches(t):
+        if berry_finder(branch):
+            return True
+    return False                 # 必须放在循环外，否则只检查第一个分支
 
 
 HW_SOURCE_FILE=__file__
@@ -138,7 +169,10 @@ def max_path_sum(t):
     >>> max_path_sum(t2) # 5, 2, 10
     17
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return label(t)
+    branch_max_sums = [max_path_sum(branch)for branch in branches(t)]
+    return label(t) + max(branch_max_sums)
 
 
 def mobile(left, right):
