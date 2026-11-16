@@ -11,7 +11,10 @@ def cumulative_mul(t):
     >>> otherTree
     Tree(5040, [Tree(60, [Tree(3), Tree(4), Tree(5)]), Tree(42, [Tree(7)])])
     """
-    "*** YOUR CODE HERE ***"
+    for branch in t.branches:
+        cumulative_mul(branch)
+    for branch in t.branches:
+        t.label *= branch.label
 
 
 def prune_small(t, n):
@@ -31,11 +34,11 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ____:
-        largest = max(____, key=____)
+    while len(t.branches) > n:
+        largest = max(t.branches, key=lambda b: b.label)
         t.branches.remove(largest)
     for b in t.branches:
-        ____
+        prune_small(b, n)
 
 
 def delete(t, x):
@@ -58,13 +61,13 @@ def delete(t, x):
     Tree(1, [Tree(4), Tree(5), Tree(3, [Tree(6)]), Tree(6), Tree(7), Tree(8), Tree(4)])
     """
     new_branches = []
-    for _________ in ________________:
-        _______________________
+    for b in t.branches:
+        delete(b, x)
         if b.label == x:
-            __________________________________
+            new_branches.extend(b.branches)
         else:
-            __________________________________
-    t.branches = ___________________
+            new_branches.append(b)
+    t.branches = new_branches
 
 
 def max_path_sum(t):
@@ -74,7 +77,10 @@ def max_path_sum(t):
     >>> max_path_sum(t)
     11
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return t.label
+    max_branch_sum = max(max_path_sum(branch) for branch in t.branches)
+    return t.label + max_branch_sum
 
 
 class Tree:
@@ -88,6 +94,7 @@ class Tree:
     >>> t.branches[1].is_leaf()
     True
     """
+
     def __init__(self, label, branches=[]):
         self.label = label
         for branch in branches:
@@ -99,18 +106,17 @@ class Tree:
 
     def __repr__(self):
         if self.branches:
-            branch_str = ', ' + repr(self.branches)
+            branch_str = ", " + repr(self.branches)
         else:
-            branch_str = ''
-        return 'Tree({0}{1})'.format(repr(self.label), branch_str)
+            branch_str = ""
+        return f"Tree({self.label!r}{branch_str})"
 
     def __str__(self):
-        return '\n'.join(self.indented())
+        return "\n".join(self.indented())
 
     def indented(self):
         lines = []
         for b in self.branches:
             for line in b.indented():
-                lines.append('  ' + line)
+                lines.append("  " + line)
         return [str(self.label)] + lines
-
