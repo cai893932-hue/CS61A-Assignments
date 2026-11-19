@@ -244,7 +244,7 @@ class FireAnt(Ant):
     food_cost = 5
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 5
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
     # END Problem 5
 
     def __init__(self, health=3):
@@ -259,12 +259,29 @@ class FireAnt(Ant):
         the additional damage if the fire ant dies.
         """
         # BEGIN Problem 5
-        "*** YOUR CODE HERE ***"
+        # 规则：同格每只 Bee 始终受等量 amount；FireAnt 死亡时额外再受 self.damage
+        # 提前保存 place 引用：super() 死亡移除后 self.place 会被置为 None
+        # 用切片副本遍历——reduce_health 可能移除蜂，改变列表
+        place = self.place
+        for bee in place.bees[:]:
+            bee.reduce_health(amount)
+        super().reduce_health(amount)
+        if self.health <= 0:
+            for bee in place.bees[:]:
+                bee.reduce_health(self.damage)
         # END Problem 5
 
 
 # BEGIN Problem 6
-# The WallAnt class
+class WallAnt(Ant):
+    name = "Wall"
+    implemented = True
+    food_cost = 4
+
+    def __init__(self, health=4):
+        super().__init__(health)
+
+
 # END Problem 6
 
 # BEGIN Problem 7
