@@ -118,7 +118,13 @@ class Ant(Insect):
             place.ant = self
         else:
             # BEGIN Problem 8b
-            assert place.ant is None, f"Too many ants in {place}"
+            if place.ant.can_contain(self):
+                place.ant.store_ant(self)  # 已有的是容器：装进去，place.ant 不变
+            elif self.can_contain(place.ant):
+                self.store_ant(place.ant)  # 自己是容器：把原来的装进来，自己上位
+                place.ant = self
+            else:
+                assert place.ant is None, f"Too many ants in {place}"
             # END Problem 8b
         Insect.add_to(self, place)
 
@@ -284,8 +290,27 @@ class WallAnt(Ant):
 
 # END Problem 6
 
+
 # BEGIN Problem 7
-# The HungryAnt Class
+class HungryAnt(Ant):
+    name = "hungry"
+    implemented = True
+    food_cost = 4
+    chew_cooldown = 3  # 类属性：测试会猴补丁改它，action 里必须用 self.chew_cooldown 查
+
+    def __init__(self, health=1):
+        super().__init__(health)
+        self.cooldown = 0  # 实例属性：每只蚂蚁各自消化，不能放类上共享
+
+    def action(self, gamestate):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        elif self.place.bees:
+            bee = random.choice(self.place.bees)
+            bee.reduce_health(bee.health)
+            self.cooldown = self.chew_cooldown
+
+
 # END Problem 7
 
 
@@ -302,12 +327,12 @@ class ContainerAnt(Ant):
 
     def can_contain(self, other):
         # BEGIN Problem 8a
-        "*** YOUR CODE HERE ***"
+        return self.ant_contained is None and not other.is_container
         # END Problem 8a
 
     def store_ant(self, ant):
         # BEGIN Problem 8a
-        "*** YOUR CODE HERE ***"
+        self.ant_contained = ant  # 只赋值属性；写成 self, self.ant_contained = ant 会去解包 ant 而 TypeError
         # END Problem 8a
 
     def remove_ant(self, ant):
@@ -327,7 +352,10 @@ class ContainerAnt(Ant):
 
     def action(self, gamestate):
         # BEGIN Problem 8a
-        "*** YOUR CODE HERE ***"
+        if self.ant_contained is not None:
+            self.ant_contained.action(gamestate)
+        else:
+            pass
         # END Problem 8a
 
 
@@ -338,7 +366,11 @@ class BodyguardAnt(ContainerAnt):
     food_cost = 4
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 8c
-    implemented = False  # Change to True to view in the GUI
+    implemented = True
+
+    def __init__(self, health=2):
+        super().__init__(health)  # Change to True to view in the GUI
+
     # END Problem 8c
 
 
