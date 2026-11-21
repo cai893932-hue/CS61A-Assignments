@@ -51,7 +51,7 @@ class Insect:
 
     next_id = 0  # Every insect gets a unique id number
     damage = 0
-    # ADD CLASS ATTRIBUTES HERE
+    is_waterproof = False  # 默认不防水；ScubaThrower 类里覆盖为 True
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -375,7 +375,21 @@ class BodyguardAnt(ContainerAnt):
 
 
 # BEGIN Problem 9
-# The TankAnt class
+class TankAnt(ContainerAnt):
+    """A TankAnt attacks all bees in its place each turn, and can guard one ant."""
+    name = "Tank"
+    food_cost = 6
+    damage = 1
+    implemented = True
+
+    def __init__(self, health=2):
+        super().__init__(health)
+
+    def action(self, gamestate):
+        for bee in list(self.place.bees):  # 用副本遍历：reduce_health 会把死蜂从列表移除
+            bee.reduce_health(self.damage)
+        if self.ant_contained is not None:
+            self.ant_contained.action(gamestate)  # 被保护的蚂蚁照常行动
 # END Problem 9
 
 
@@ -386,12 +400,19 @@ class Water(Place):
         """Add an Insect to this place. If the insect is not waterproof, reduce
         its health to 0."""
         # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
+        super().add_insect(insect)
+        if not insect.is_waterproof:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 
 # BEGIN Problem 11
-# The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    """A ScubaThrower is a ThrowerAnt that can be placed in water."""
+    name = "Scuba"
+    food_cost = 6
+    is_waterproof = True  # 类属性：靠继承就能让所有实例防水
+    implemented = True
 # END Problem 11
 
 
