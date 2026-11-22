@@ -100,6 +100,7 @@ class Ant(Insect):
     food_cost = 0
     is_container = False
     # ADD CLASS ATTRIBUTES HERE
+    is_doubled = False  # 类属性只当"默认值"：没被标记过的蚂蚁读它得到 False
 
     def __init__(self, health=1):
         super().__init__(health)
@@ -140,7 +141,9 @@ class Ant(Insect):
     def double(self):
         """Double this ants's damage, if it has not already been doubled."""
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        if not self.is_doubled:
+            self.damage *= 2          # 写：在实例上新建 damage，遮蔽类属性
+            self.is_doubled = True    # 写：在实例上新建 is_doubled，遮蔽类默认值
         # END Problem 12
 
 
@@ -358,6 +361,17 @@ class ContainerAnt(Ant):
             pass
         # END Problem 8a
 
+    def double(self):
+        """容器自己加倍，里面保护的蚂蚁也要加倍。"""
+        # 注意：这句必须放在 if 外面——容器可能早就被加倍过了，
+        # 但后来才被塞进一只新蚂蚁（tests/12.py turn 2 的场景），
+        # 那只新蚂蚁仍 needs 加倍。
+        if self.ant_contained is not None:
+            self.ant_contained.double()
+        if not self.is_doubled:
+            self.damage *= 2
+            self.is_doubled = True
+
 
 class BodyguardAnt(ContainerAnt):
     """BodyguardAnt provides protection to other Ants."""
@@ -423,7 +437,7 @@ class QueenAnt(ThrowerAnt):
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
     # END Problem 12
 
     def action(self, gamestate):
@@ -431,7 +445,16 @@ class QueenAnt(ThrowerAnt):
         in her tunnel.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        # 1) 把身后隧道里的蚂蚁 damage 加倍
+        # exit 指向 AntHomeBase（"身后"）；entrance 指向 hive（"身前"）
+        current_place = self.place.exit
+        while current_place is not None:
+            ant = current_place.ant
+            if ant is not None and ant is not self:
+                ant.double()  # 交给 Ant.double / ContainerAnt.double 处理"只加倍一次"
+            current_place = current_place.exit
+        # 2) 蚁后自己照常投叶子，只投一次（原来误缩进在循环里）
+        super().action(gamestate)
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -439,7 +462,9 @@ class QueenAnt(ThrowerAnt):
         remaining, signal the end of the game.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        super().reduce_health(amount)
+        if self.health <= 0:
+            ants_lose()  # 抛 AntsLoseException，由 GameState.simulate 捕获
         # END Problem 12
 
 
